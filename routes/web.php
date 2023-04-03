@@ -11,6 +11,18 @@
 |
 */
 
-Route::get('/home', function () {
+Route::get('/', function () { // routa raiz
     return view('welcome');
 });
+
+Route::get('/post', function () {
+    return 'hola mundo :v';
+});
+
+Route::get('/post/{id}', function ($id) { //asi se pasan valores por la ruta
+    return 'el numero de esta pagina es: ' . $id;
+});
+
+Route::get('/post/{id}/{name}', function ($id,$name) {
+    return 'el numero de esta pagina es: ' . $id . ' y el nombre ingresado es: ' . $name;
+})->where('name','[a-zA-Z]+'); // expresion regular
