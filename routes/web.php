@@ -29,6 +29,29 @@
 
 Route::resource('post','CrudController');
 
+Route::get('insert', function () {
+
+    DB::insert('INSERT INTO products (product_name,price,category,characteristics,ref) VALUES (?,?,?,?,?)', ['manzana',1200,'fruta','fresca','f3232']);
+
+});
+
+Route::get('select', function () {
+
+    $results = DB::select('SELECT * FROM products WHERE id=?', [1]);
+
+    foreach($results as $result){
+
+        return $result->product_name;
+
+    }
+
+});
+
+Route::get('update/{name}', function ($name) {
+
+    DB::update('UPDATE products SET product_name = ? WHERE id = ?', [$name,1]);
+
+})->where('name','[a-zA-Z]+');
 
 // Route::get('/post', function () {
 //     return 'hola mundo :v';
