@@ -11,6 +11,64 @@
 |
 */
 
+use App\Product;
+
+Route::get('/read',function(){
+    $products=Product::all();
+
+    foreach($products as $product){
+        echo $product->product_name;
+    }
+
+    return $products;
+});
+
+Route::get('/filter',function(){
+    $products=Product::where('category','fruta')
+    ->take(3)
+    ->orderBy('product_name','asc')
+    ->get();
+    // ->min('price');
+
+    return $products;
+});
+
+Route::get('/insert',function(){
+    $products=new Product();
+
+    $products->product_name = 'papaya';
+    $products->price = '2400';
+    $products->category = 'fruta';
+    $products->characteristics = 'fresca';
+    $products->ref = 'f6545';
+
+    $products->save();
+});
+
+Route::get('/update',function(){
+    $products=Product::find(2);
+
+    $products->product_name = 'pera';
+    $products->price = '900';
+    $products->category = 'fruta';
+    $products->characteristics = 'fresca';
+    $products->ref = 'f7845';
+
+    $products->save();
+});
+
+
+Route::get('/update/{id}/{name}',function($id,$name){
+    $products=Product::find($id);
+
+    $products->product_name = $name;
+
+    $products->save();
+})->where([
+    'id'    => '[0-9]+',
+    'name'  => '[a-zA-Z]+'
+]);
+
 // Route::get('/', function () { // routa raiz
 //     return view('welcome');
 // });
@@ -29,29 +87,32 @@
 
 Route::resource('post','CrudController');
 
-Route::get('insert', function () {
 
-    DB::insert('INSERT INTO products (product_name,price,category,characteristics,ref) VALUES (?,?,?,?,?)', ['manzana',1200,'fruta','fresca','f3232']);
+//! Raw SQL Query
 
-});
+// Route::get('insert', function () {
 
-Route::get('select', function () {
+//     DB::insert('INSERT INTO products (product_name,price,category,characteristics,ref) VALUES (?,?,?,?,?)', ['manzana',1200,'fruta','fresca','f3232']);
 
-    $results = DB::select('SELECT * FROM products WHERE id=?', [1]);
+// });
 
-    foreach($results as $result){
+// Route::get('select', function () {
 
-        return $result->product_name;
+//     $results = DB::select('SELECT * FROM products WHERE id=?', [1]);
 
-    }
+//     foreach($results as $result){
 
-});
+//         return $result->product_name;
 
-Route::get('update/{name}', function ($name) {
+//     }
 
-    DB::update('UPDATE products SET product_name = ? WHERE id = ?', [$name,1]);
+// });
 
-})->where('name','[a-zA-Z]+');
+// Route::get('update/{name}', function ($name) {
+
+//     DB::update('UPDATE products SET product_name = ? WHERE id = ?', [$name,1]);
+
+// })->where('name','[a-zA-Z]+');
 
 // Route::get('/post', function () {
 //     return 'hola mundo :v';
